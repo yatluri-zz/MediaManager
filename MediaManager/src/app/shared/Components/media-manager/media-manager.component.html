@@ -1,0 +1,83 @@
+<div class="modal-header">
+  <h4 class="modal-title pull-left" i18n='MediaManagerComponent|Header for MediaManager@@MediaManagerHeader'>
+    Media Manager
+  </h4>
+  <button type="button" class="close pull-right" aria-label="Close" (click)="onClose()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+        <div class="center-alignment">
+          <div class="form-group">
+            <h4 class="fileNameHeader" i18n='MediaManager|FileName for uploaded imagefile@@MediaManagerFileName'>{{mediaFileName}}</h4>
+          </div>
+          <div class="form-group">
+            <input id='mediaManagerFileUploader' [accept]="mediaFormats" type="file" class="form-control-file" (change)="onFileChange($event.target.files)"
+              required />
+            <button class="btn custom-button btn-primary" (click)="onFileUploader()">
+              <span class='btn-title'>
+                <i class="fa fa-2x fa-cloud-upload" aria-hidden="true"></i>&nbsp;
+                <span class='btn-title-child' i18n='MediaManager|Upload Image text for MediaManager@@MedaiManagerUploadText'>Upload Image
+                </span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+        <div class="form-group">
+          <ul class="fileUploadInstruction">
+            <li>
+              <h5 i18n='MediaManager|FileUploadText  instructions for MediaManger@@FileUploadText'>
+                Acceptable image file types are jpeg,jpg,png,gif.
+              </h5>
+            </li>
+            <li>
+              <h5 i18n='MediaManager|FileUploadText  instructions for MediaManger@@FileUploadText'>
+                Acceptable image file size is less than 2MB.
+              </h5>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2">
+        <div *ngIf='previewImgUrl.length > 0' class="form-group pull-right">
+          <div>
+            <img [src]='previewImgUrl' class="img  img-thumbnail img-preview" height="110" width="110" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr/>
+  <div class="row">
+    <div class="col-xs-12">
+
+    </div>
+  </div>
+  <hr/>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="img-container search-results" infinite-scroll [infiniteScrollDistance]="scrollDistance" [infiniteScrollUpDistance]="scrollUpDistance"
+        [infiniteScrollThrottle]="throttle" (scrolled)="onScrollDown()" (scrolledUp)="onUp()" [scrollWindow]="false">
+        <div class="thumbContainer thumb-aligner" *ngFor="let m of mediaList; let i = index">
+          <img class="img img-responsive imgCustom" [src]='m.MediaUrl' height="80" width="80" />
+          <div class="mediaOverLay">
+            <div class="mediaMarker">
+              <h2 id='MediaManagerImageTitle' i18n='MediaManager|Image title for MediaManager@@MediaManagerImageTitle'>{{m.Name}}</h2>
+              <div class="mediaPosition">
+                <button class="btn btn-primary custom-btn pull-right" i18n='MediaManager|Select button for MediaManager@@Select' (click)='onMediaSave(m)'>
+                  Select
+                </button>
+                <button class="btn btn-default custom-btn" i18n='MediaManager|Delete button for MediaManager@@Delete' (click)='onDeleteMedia(m)'>Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
