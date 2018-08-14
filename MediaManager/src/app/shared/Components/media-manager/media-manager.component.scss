@@ -30,7 +30,7 @@ $media-pink-custom: #e45641;
   border: 1px solid $media-border-custom;
   margin: 0px;
   // overflow-y: scroll;
-  height: 550px;
+  height: 500px;
   width: 100%;
 }
 .imgCustom {
@@ -86,7 +86,7 @@ $media-pink-custom: #e45641;
   margin: 1px;
 }
 .search-results {
-  height: 55rem;
+  height: 53rem;
   overflow-y: scroll;
 }
 #mediaManagerFileUploader {
@@ -96,15 +96,15 @@ $media-pink-custom: #e45641;
   display: block;
 }
 .custom-button {
-  width: 100%;
-  padding: 10px;
+  height: 34px !important;
+  font-size: small !important;
 }
 .fa-cloud-upload {
-  font-size: 28px;
+  font-size: 18px;
   position: relative;
 }
 .btn-title-child {
-  font-size: larger;
+  font-size: 14px;
   font-weight: bolder;
   position: relative;
 }
@@ -119,4 +119,58 @@ ul.fileUploadInstruction {
   font-size: large;
   font-weight: bold;
   list-style: square;
+}
+.custom-filters {
+  font-size: small;
+}
+.sortLabel {
+  text-align: center !important;
+}
+.collectionCodeForm {
+  width: 70%;
+  resize: none !important;
+}
+.ul-filers li {
+  float: left;
+  list-style: none;
+  margin: 5px;
+  padding: 2px;
+}
+.ul-filers {
+  width: 100%;
+}
+
+#filterTypeLabel {
+  font-size: larger;
+  margin: 2px;
+  margin-right: -8%;
+  text-align: center;
+}
+#sortTypeLabel {
+  font-size: larger;
+  margin: 2px;
+  padding: 2px;
+  margin-right: -13%;
+  text-align: center;
+}
+.form-inline {
+  width: 100%;
+}
+.formControlLeft {
+  margin-right: 0px;
+  float: right;
+}
+.formControlRight {
+  margin-left: 0px;
+  float: left;
+}
+@media screen and (min-width: 900px) {
+  .formControlLeft {
+    margin-right: -170px;
+    float: right;
+  }
+  .formControlRight {
+    margin-left: -30px;
+    float: left;
+  }
 }

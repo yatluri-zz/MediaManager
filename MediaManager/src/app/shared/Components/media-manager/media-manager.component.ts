@@ -1,19 +1,27 @@
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 import { Component, OnInit, Input } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { MediaService } from '@admin/services/media/media.service';
 import { MediaManagerView } from './models/media-manager.view';
 import { MediaManager } from '../../models/MediaManager';
+import { NotificationCenterService } from '@admin/services/notification/notification-center.service';
+import { NotificationProperties } from '@admin/interfaces/NotificationProperties';
 @Component({
   selector: 'app-media-manager',
   templateUrl: './media-manager.component.html',
   styleUrls: ['./media-manager.component.scss']
 })
 export class MediaManagerComponent extends MediaManagerView implements OnInit {
+  mediaForm: FormGroup = this.mediaForms();
+  mediaFiltersForm: FormGroup = this.mediaFilterForm();
   constructor(
     private bsModalRef: BsModalRef,
+    private bsModalService: BsModalService,
     private sanitizer: DomSanitizer,
-    private http: MediaService
+    private http: MediaService,
+    private notification: NotificationCenterService,
+    private formBuilder: FormBuilder
   ) {
     super();
     this.messages = {
@@ -25,7 +33,19 @@ export class MediaManagerComponent extends MediaManagerView implements OnInit {
   }
   @Input()
   mediaList: Array<MediaManager> = [];
-  ngOnInit() {}
+  @Input()
+  imageText: string;
+  @Input()
+  previewImgUrl: string;
+  ngOnInit() {
+    this.mediaForm.patchValue({
+      sortLevel: 'Create Date'
+    });
+    this.mediaFiltersForm.patchValue({
+      filterLevel: 'Company'
+    });
+    this.filterChanges();
+  }
   onClose() {
     this.bsModalRef.hide();
   }
@@ -36,10 +56,10 @@ export class MediaManagerComponent extends MediaManagerView implements OnInit {
     console.log($event);
   }
 
-  onMediaSave(m: MediaManager) {
+  onMediaSelect(m: MediaManager) {
     if (m && m !== undefined) {
       console.log(m);
-      this.bsModalRef.hide();
+      this.bsModalService.onHide.next(m);
     }
   }
 
@@ -47,7 +67,7 @@ export class MediaManagerComponent extends MediaManagerView implements OnInit {
     console.log('scrolled down!!');
     this.http.getMedia().subscribe((response: MediaManager[]) => {
       if (response && response !== undefined) {
-        this.mediaList = [...response['Media']];
+        this.mediaList = [...this.mediaList, ...response['Media']];
       }
     });
   }
@@ -56,7 +76,24 @@ export class MediaManagerComponent extends MediaManagerView implements OnInit {
     console.log('scrolled up!');
   }
   onFileChange($event) {
-    this.mediaFileName = $event[0].name;
+    if ($event && $event !== undefined) {
+      const fileName: string = $event[0].name;
+      if (
+        (fileName.includes('.png') ||
+          fileName.includes('.jpg') ||
+          fileName.includes('.jpeg') ||
+          fileName.includes('.gif')) &&
+        $event[0].size < 2000
+      ) {
+        console.log(fileName);
+      } else {
+        const message: NotificationProperties = {
+          message: 'please choose the file less than 2MB',
+          title: 'Error'
+        };
+        this.notification.error(message);
+      }
+    }
   }
   onFileUploader() {
     let uploadElement: HTMLElement = document.getElementById(
@@ -70,5 +107,31 @@ export class MediaManagerComponent extends MediaManagerView implements OnInit {
       this.mediaList.splice(this.mediaList.indexOf(media), 1);
       this.mediaList = [...this.mediaList];
     }
+  }
+  mediaForms() {
+    return this.formBuilder.group({
+      sortLevel: ['', []]
+    });
+  }
+  filterChanges() {
+    this.mediaForm
+      .get('sortLevel')
+      .valueChanges.subscribe((response: string) => {
+        if (response && response !== undefined) {
+          console.log(response);
+        }
+      });
+    this.mediaFiltersForm
+      .get('filterLevel')
+      .valueChanges.subscribe((response: string) => {
+        if (response && response !== undefined) {
+          console.log(response);
+        }
+      });
+  }
+  mediaFilterForm() {
+    return this.formBuilder.group({
+      filterLevel: ['', []]
+    });
   }
 }
